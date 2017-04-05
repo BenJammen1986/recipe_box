@@ -10,11 +10,13 @@ import java.sql.Timestamp;
 public class Recipe {
   private int id;
   private String title;
+  private String instructions;
   private int userId;
   private String tag;
 
-  public Recipe(String title, int userId, String tag) {
+  public Recipe(String title, String instructions, int userId, String tag) {
     this.title = title;
+    this.instructions = instructions;
     this.userId = userId;
     this.tag = tag;
   }
@@ -31,18 +33,32 @@ public class Recipe {
     return tag;
   }
 
+  public String getInstructions() {
+    return instructions;
+  }
+
   public int getId() {
     return id;
   }
 
-  public List<String> getIngredients(int recipeId) {
-    try (Connection con = DB.sql2o.open()) {
-      String sql = "SELECT ingredients.ingredient FROM ingredients WHERE recipeId = :recipeId;";
-      return con.createQuery(sql)
-        .addParameter("recipeId", recipeId)
-        .executeAndFetch(String.class);
-    }
-  }
+  // public List<String> getIngredients(int recipeId) {
+  //   try (Connection con = DB.sql2o.open()) {
+  //     String sql = "SELECT ingredients.ingredient FROM ingredients WHERE recipeId = :recipeId;";
+  //     return con.createQuery(sql)
+  //       .addParameter("recipeId", recipeId)
+  //       .executeAndFetch(String.class);
+  //   }
+  // }
+
+  // public String addIngredient(String ingredient) {
+  //   try (Connection con = DB.sql2o.open()) {
+  //     String sql = "INSERT INTO ingredients (recipeId, ingredient) VALUES (:recipeId, :ingredient);";
+  //       con.createQuery(sql)
+  //       .addParameter("recipeId", recipeId)
+  //       .addParameter("ingredient", ingredient)
+  //       .executeUpdate();
+  //   }
+  // }
 
   public static List<Recipe> all() {
     try (Connection con = DB.sql2o.open()) {
