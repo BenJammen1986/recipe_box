@@ -77,5 +77,16 @@ public class Review {
     }
   }
 
+  public void deleteReview() {
+    try (Connection con = DB.sql2o.open()) {
+      String sql = "DELETE FROM reviews WHERE id = :id;";
+      con.createQuery(sql)
+        .addParameter("id", id)
+        .executeUpdate();
+    }
+  }
+
+  
+
 
 }

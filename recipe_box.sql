@@ -75,7 +75,6 @@ CREATE TABLE recipes (
     id integer NOT NULL,
     title character varying,
     userid integer,
-    tag character varying,
     instructions text
 );
 
@@ -139,22 +138,23 @@ ALTER SEQUENCE reviews_id_seq OWNED BY reviews.id;
 
 
 --
--- Name: tag; Type: TABLE; Schema: public; Owner: Guest
+-- Name: tags; Type: TABLE; Schema: public; Owner: Guest
 --
 
-CREATE TABLE tag (
+CREATE TABLE tags (
     id integer NOT NULL,
-    recipeid integer
+    recipeid integer,
+    tag character varying
 );
 
 
-ALTER TABLE tag OWNER TO "Guest";
+ALTER TABLE tags OWNER TO "Guest";
 
 --
--- Name: tag_id_seq; Type: SEQUENCE; Schema: public; Owner: Guest
+-- Name: tags_id_seq; Type: SEQUENCE; Schema: public; Owner: Guest
 --
 
-CREATE SEQUENCE tag_id_seq
+CREATE SEQUENCE tags_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -162,13 +162,13 @@ CREATE SEQUENCE tag_id_seq
     CACHE 1;
 
 
-ALTER TABLE tag_id_seq OWNER TO "Guest";
+ALTER TABLE tags_id_seq OWNER TO "Guest";
 
 --
--- Name: tag_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: Guest
+-- Name: tags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: Guest
 --
 
-ALTER SEQUENCE tag_id_seq OWNED BY tag.id;
+ALTER SEQUENCE tags_id_seq OWNED BY tags.id;
 
 
 --
@@ -230,7 +230,7 @@ ALTER TABLE ONLY reviews ALTER COLUMN id SET DEFAULT nextval('reviews_id_seq'::r
 -- Name: id; Type: DEFAULT; Schema: public; Owner: Guest
 --
 
-ALTER TABLE ONLY tag ALTER COLUMN id SET DEFAULT nextval('tag_id_seq'::regclass);
+ALTER TABLE ONLY tags ALTER COLUMN id SET DEFAULT nextval('tags_id_seq'::regclass);
 
 
 --
@@ -261,7 +261,8 @@ SELECT pg_catalog.setval('ingredients_id_seq', 2, true);
 -- Data for Name: recipes; Type: TABLE DATA; Schema: public; Owner: Guest
 --
 
-COPY recipes (id, title, userid, tag, instructions) FROM stdin;
+COPY recipes (id, title, userid, instructions) FROM stdin;
+1	name	1	bake forever
 \.
 
 
@@ -269,7 +270,7 @@ COPY recipes (id, title, userid, tag, instructions) FROM stdin;
 -- Name: recipes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('recipes_id_seq', 1, false);
+SELECT pg_catalog.setval('recipes_id_seq', 1, true);
 
 
 --
@@ -288,18 +289,21 @@ SELECT pg_catalog.setval('reviews_id_seq', 1, false);
 
 
 --
--- Data for Name: tag; Type: TABLE DATA; Schema: public; Owner: Guest
+-- Data for Name: tags; Type: TABLE DATA; Schema: public; Owner: Guest
 --
 
-COPY tag (id, recipeid) FROM stdin;
+COPY tags (id, recipeid, tag) FROM stdin;
+1	1	hello
+2	1	testing
+3	1	hey
 \.
 
 
 --
--- Name: tag_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
+-- Name: tags_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('tag_id_seq', 1, false);
+SELECT pg_catalog.setval('tags_id_seq', 3, true);
 
 
 --
@@ -342,11 +346,11 @@ ALTER TABLE ONLY reviews
 
 
 --
--- Name: tag_pkey; Type: CONSTRAINT; Schema: public; Owner: Guest
+-- Name: tags_pkey; Type: CONSTRAINT; Schema: public; Owner: Guest
 --
 
-ALTER TABLE ONLY tag
-    ADD CONSTRAINT tag_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY tags
+    ADD CONSTRAINT tags_pkey PRIMARY KEY (id);
 
 
 --

@@ -83,4 +83,13 @@ public class ReviewTest {
     assertTrue(testReview1.equals(testReview2));
   }
 
+  @Test
+  public void deleteReview_deletesReviewFromDB_true() {
+    Review testReview = new Review(1, 89, "Good Recipe");
+    testReview.save();
+    int testReviewId = testReview.getId();
+    testReview.deleteReview();
+    assertEquals(null, Review.find(testReviewId));
+  }
+
 }

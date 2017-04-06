@@ -29,6 +29,15 @@ public class User {
     return id;
   }
 
+  public List<Recipe> getRecipes() {
+    try (Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM recipes WHERE userId = :userId;";
+      return con.createQuery(sql)
+        .addParameter("userId", this.id)
+        .executeAndFetch(Recipe.class);
+    }
+  }
+
   public static List<User> all() {
     try (Connection con = DB.sql2o.open()) {
       String sql = "SELECT * FROM users;";
@@ -57,6 +66,46 @@ public class User {
       return this.getName().equals(newUser.getName()) &&
              this.getEmail().equals(newUser.getEmail()) &&
              this.getId() == newUser.getId();
+    }
+  }
+
+  public static User find(int id) {
+    try (Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM users WHERE id = :id;";
+      return con.createQuery(sql)
+        .addParameter("id", id)
+        .executeAndFetchFirst(User.class);
+    }
+  }
+
+  public void deleteUser() {
+    List<Recipe> recipes = this.getRecipes();
+    for (Recipe recipe : recipes) {
+      recipe.deleteRecipe();
+    }
+    try (Connection con = DB.sql2o.open()) {
+      String sql = "DELETE FROM users WHERE id = :id;";
+      con.createQuery(sql)
+        .addParameter("id", this.id)
+        .executeUpdate();
+    }
+  }
+
+  public List<Review> getUserReviews() {
+    try (Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM reviews AS a WHERE recipeId IN (SELECT id FROM recipes WHERE userId = :userId) ORDER By a.rating desc;";
+      return con.createQuery(sql)
+        .addParameter("userId", this.id)
+        .executeAndFetch(Review.class);
+    }
+  }
+
+  public Float getUserRating() {
+    try (Connection con = DB.sql2o.open()) {
+      String sql = "SELECT AVG(rating) FROM reviews WHERE recipeId IN (SELECT id FROM recipes WHERE userId = :userId);";
+      return con.createQuery(sql)
+        .addParameter("userId", this.id)
+        .executeScalar(Float.class);
     }
   }
 }
