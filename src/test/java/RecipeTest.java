@@ -52,14 +52,14 @@ public class RecipeTest {
     assertTrue(Recipe.all().get(0).equals(testRecipe));
   }
 
-  @Test
-  public void addIngredient_addsIngredientToDatabase() {
-    Recipe testRecipe = new Recipe("pasta", "bake for 45 hours at 3000 degrees", 1 , "italian");
-    testRecipe.addIngredient();
-    addIngredient("bananas");
-    assertTrue();
-
-  }
+  // @Test
+  // public void addIngredient_addsIngredientToDatabase() {
+  //   Recipe testRecipe = new Recipe("pasta", "bake for 45 hours at 3000 degrees", 1 , "italian");
+  //   testRecipe.addIngredient("tomatoes");
+  //   assertEquals("tomatoes", )
+  //
+  //
+  // }
 
   @Test
   public void all_returnsAllRecipesInDB_true() {
